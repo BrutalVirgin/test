@@ -1,15 +1,16 @@
-import fs from "fs";
-
+import fs from "fs"
+import path from 'path'
 
 function main(lines: number) {
-    fs.readFile("file.txt", "utf8",
-        (error, data) => {
-            if (error) throw error
-            const splitData = data.split('\r\n')
+    const filePath = path.join(__dirname, "/file.txt")
+    let stream = fs.createReadStream(filePath)
 
-            const final = takeLines(splitData, lines)
-            console.log(final)
-        })
+    stream.on("data", function (chunk) {
+        const splitData = chunk.toString().split('\r\n')
+
+        const final = takeLines(splitData, lines)
+        console.log(final)
+    });
 }
 
 function takeLines(arr: string[], line: number): string[] {
